@@ -16,6 +16,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import include, path
 
+
+
 urlpatterns = [
     path('', admin.site.urls),
+    path(r'^chaining/', include('smart_selects.urls'))
 ]
+
+# urlpatterns = patterns('',
+    # url(r'^admin/', include(admin.site.urls)),
+    # url(r'^chaining/', include('smart_selects.urls')),
+# )
+
+
+# urlpatterns = patterns('',
+#     url(r'^admin/', include(admin.site.urls)),
+#     url(r'^chaining/', include('smart_selects.urls')),
+# )

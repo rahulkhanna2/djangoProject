@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-from .models import CollectionsMaster, MerchantMaster, DealsAudit, DealsCollections
+from .models import CollectionsMaster, MerchantCollections, MerchantMaster, DealsAudit, DealsCollections
 
 
 class CollectionMasterAdmin(admin.ModelAdmin):
@@ -61,3 +61,5 @@ admin.site.register(CollectionsMaster, CollectionMasterAdmin)
 admin.site.register(MerchantMaster, MerchantMasterAdmin)
 admin.site.register(DealsAudit, DealsAuditAdmin)
 admin.site.register(DealsCollections, DealsCollectionsAdmin)
+# admin.site.register(MerchantCollections)
+

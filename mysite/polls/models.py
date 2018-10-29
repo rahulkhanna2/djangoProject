@@ -6,6 +6,8 @@
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
 from django.db import models
+from smart_selects.db_fields import ChainedForeignKey
+
 
 
 class AppAuthentication(models.Model):
@@ -231,14 +233,6 @@ class DealsAudit(models.Model):
         db_table = 'deals_audit'
 
 
-class DealsCollections(models.Model):
-    deal = models.ForeignKey('DealsMaster', models.DO_NOTHING, blank=True, null=True)
-    collection = models.ForeignKey(CollectionsMaster, models.DO_NOTHING, blank=True, null=True)
-    rank = models.IntegerField(blank=True, null=True)
-
-    class Meta:
-        managed = False
-        db_table = 'deals_collections'
 
 
 class DealsMaster(models.Model):
@@ -322,7 +316,19 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
+class DealsCollections(models.Model):
+    deal = ChainedForeignKey('Deals')
+    deal = models.ForeignKey('DealsMaster', models.DO_NOTHING, blank=True, null=True)
+    collection = models.ForeignKey(CollectionsMaster, models.DO_NOTHING, blank=True, null=True)
+    rank = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'deals_collections'
+
+
 class MerchantCollections(models.Model):
+    deal = models.ForeignKey(DealsCollections, on_delete=models.CASCADE)
     collection = models.ForeignKey(CollectionsMaster, models.DO_NOTHING)
     merchant = models.ForeignKey('MerchantMaster', models.DO_NOTHING, blank=True, null=True)
     rank = models.IntegerField(blank=True, null=True)

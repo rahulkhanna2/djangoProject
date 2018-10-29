@@ -24,7 +24,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '!+*3flk6@63mm4oh(aokq5+@=y#g&xo&7h&thwzpxy4r0w(4o_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
+
+JQUERY_URL = True
+
 
 ALLOWED_HOSTS = ['*']
 
@@ -40,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'polls',
     'storages',
+    'smart_selects'
+
 ]
 
 MIDDLEWARE = [
