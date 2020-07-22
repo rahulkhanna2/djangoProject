@@ -95,7 +95,7 @@ class BlockedDealsRewards(models.Model):
     blocked_till_date_time = models.DateTimeField(blank=True, null=True)
     unsuccessful_attempt_count = models.IntegerField()
     last_pin_attempt_date_time = models.DateTimeField()
-    deal = models.ForeignKey('DealsMaster', models.DO_NOTHING)
+    deal = models.ForeignKey('DealsMain', models.DO_NOTHING)
     created_date = models.DateTimeField()
     updated_date = models.DateTimeField()
 
@@ -110,7 +110,7 @@ class BlockedMerchantPin(models.Model):
     blocked_till_date_time = models.DateTimeField(blank=True, null=True)
     unsuccessful_attempt_count = models.IntegerField(blank=True, null=True)
     last_pin_attempt_date_time = models.DateTimeField(blank=True, null=True)
-    merchant = models.ForeignKey('MerchantMaster', models.DO_NOTHING)
+    merchant = models.ForeignKey('MerchantMain', models.DO_NOTHING)
     created_date = models.DateTimeField()
     updated_date = models.DateTimeField()
 
@@ -125,7 +125,7 @@ class BlockedStampsRewards(models.Model):
     blocked_till_date_time = models.DateTimeField(blank=True, null=True)
     unsuccessful_attempt_count = models.IntegerField(blank=True, null=True)
     last_pin_attempt_date_time = models.DateTimeField(blank=True, null=True)
-    stamp_card = models.ForeignKey('StampCardsMaster', models.DO_NOTHING, blank=True, null=True)
+    stamp_card = models.ForeignKey('StampCardsMain', models.DO_NOTHING, blank=True, null=True)
     created_date = models.DateTimeField()
     updated_date = models.DateTimeField()
 
@@ -159,7 +159,7 @@ class CollectionAudit(models.Model):
         db_table = 'collection_audit'
 
 
-class CollectionsMaster(models.Model):
+class CollectionsMain(models.Model):
     collection_id = models.AutoField(primary_key=True)
     title = models.CharField(unique=True, max_length=50)
     sub_title = models.CharField(max_length=100)
@@ -183,12 +183,12 @@ class CollectionsMaster(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'collections_master'
+        db_table = 'collections_main'
 
 
 class DealCouponCodes(models.Model):
     coupon_code_id = models.AutoField(primary_key=True)
-    deal = models.ForeignKey('DealsMaster', models.DO_NOTHING)
+    deal = models.ForeignKey('DealsMain', models.DO_NOTHING)
     coupon_code = models.CharField(max_length=2000)
     is_used = models.IntegerField()
     created_date = models.DateTimeField(blank=True, null=True)
@@ -235,12 +235,12 @@ class DealsAudit(models.Model):
 
 
 
-class DealsMaster(models.Model):
+class DealsMain(models.Model):
     deal_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=50, blank=True, null=True)
     sub_title = models.CharField(max_length=100, blank=True, null=True)
     status_code = models.IntegerField(blank=True, null=True)
-    merchant = models.ForeignKey('MerchantMaster', models.DO_NOTHING, blank=True, null=True)
+    merchant = models.ForeignKey('MerchantMain', models.DO_NOTHING, blank=True, null=True)
     tnc = models.CharField(max_length=5000)
     start_date = models.DateTimeField(blank=True, null=True)
     creation_time = models.DateTimeField(blank=True, null=True)
@@ -269,7 +269,7 @@ class DealsMaster(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'deals_master'
+        db_table = 'deals_main'
 
 
 class DjangoAdminLog(models.Model):
@@ -318,8 +318,8 @@ class DjangoSession(models.Model):
 
 class DealsCollections(models.Model):
     deal = ChainedForeignKey('Deals')
-    deal = models.ForeignKey('DealsMaster', models.DO_NOTHING, blank=True, null=True)
-    collection = models.ForeignKey(CollectionsMaster, models.DO_NOTHING, blank=True, null=True)
+    deal = models.ForeignKey('DealsMain', models.DO_NOTHING, blank=True, null=True)
+    collection = models.ForeignKey(CollectionsMain, models.DO_NOTHING, blank=True, null=True)
     rank = models.IntegerField(blank=True, null=True)
 
     class Meta:
@@ -329,8 +329,8 @@ class DealsCollections(models.Model):
 
 class MerchantCollections(models.Model):
     deal = models.ForeignKey(DealsCollections, on_delete=models.CASCADE)
-    collection = models.ForeignKey(CollectionsMaster, models.DO_NOTHING)
-    merchant = models.ForeignKey('MerchantMaster', models.DO_NOTHING, blank=True, null=True)
+    collection = models.ForeignKey(CollectionsMain, models.DO_NOTHING)
+    merchant = models.ForeignKey('MerchantMain', models.DO_NOTHING, blank=True, null=True)
     rank = models.IntegerField(blank=True, null=True)
 
     class Meta:
@@ -338,7 +338,7 @@ class MerchantCollections(models.Model):
         db_table = 'merchant_collections'
 
 
-class MerchantMaster(models.Model):
+class MerchantMain(models.Model):
     merchant_id = models.AutoField(primary_key=True)
     merchant_name = models.CharField(max_length=45, blank=True, null=True)
     subtitle = models.CharField(max_length=100, blank=True, null=True)
@@ -365,7 +365,7 @@ class MerchantMaster(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'merchant_master'
+        db_table = 'merchant_main'
 
 
 class MerchantSpoc(models.Model):
@@ -385,7 +385,7 @@ class MerchantSpoc(models.Model):
 
 class MerchantStores(models.Model):
     store_id = models.AutoField(primary_key=True)
-    merchant = models.ForeignKey(MerchantMaster, models.DO_NOTHING, blank=True, null=True)
+    merchant = models.ForeignKey(MerchantMain, models.DO_NOTHING, blank=True, null=True)
     geox = models.CharField(db_column='geoX', max_length=45, blank=True, null=True)  # Field name made lowercase.
     geoy = models.CharField(db_column='geoY', max_length=45, blank=True, null=True)  # Field name made lowercase.
     store_name = models.CharField(max_length=70)
@@ -493,19 +493,19 @@ class PromotionsAudit(models.Model):
 
 
 class PromotionsCollections(models.Model):
-    promotion = models.ForeignKey('PromotionsMaster', models.DO_NOTHING, blank=True, null=True)
-    collection = models.ForeignKey(CollectionsMaster, models.DO_NOTHING, blank=True, null=True)
+    promotion = models.ForeignKey('PromotionsMain', models.DO_NOTHING, blank=True, null=True)
+    collection = models.ForeignKey(CollectionsMain, models.DO_NOTHING, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'promotions_collections'
 
 
-class PromotionsMaster(models.Model):
+class PromotionsMain(models.Model):
     promotion_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=50, blank=True, null=True)
     sub_title = models.CharField(max_length=100, blank=True, null=True)
-    merchant = models.ForeignKey(MerchantMaster, models.DO_NOTHING, blank=True, null=True)
+    merchant = models.ForeignKey(MerchantMain, models.DO_NOTHING, blank=True, null=True)
     tnc = models.CharField(max_length=5000, blank=True, null=True)
     start_date = models.DateTimeField(blank=True, null=True)
     creation_time = models.DateTimeField(blank=True, null=True)
@@ -526,12 +526,12 @@ class PromotionsMaster(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'promotions_master'
+        db_table = 'promotions_main'
 
 
 class RewardsDeals(models.Model):
     user = models.ForeignKey('UserTable', models.DO_NOTHING)
-    deal = models.ForeignKey(DealsMaster, models.DO_NOTHING)
+    deal = models.ForeignKey(DealsMain, models.DO_NOTHING)
     date_added = models.DateTimeField()
     status = models.IntegerField()
     updated_date = models.DateTimeField()
@@ -544,7 +544,7 @@ class RewardsDeals(models.Model):
 
 class RewardsStamps(models.Model):
     user = models.ForeignKey('UserTable', models.DO_NOTHING)
-    stamp_card = models.ForeignKey('StampCardsMaster', models.DO_NOTHING)
+    stamp_card = models.ForeignKey('StampCardsMain', models.DO_NOTHING)
     date_added = models.DateTimeField()
     total_stamps_on_card = models.IntegerField()
     stamp_status = models.IntegerField()
@@ -590,8 +590,8 @@ class StampCardsAudit(models.Model):
 
 
 class StampCardsCollections(models.Model):
-    stamp_card = models.ForeignKey('StampCardsMaster', models.DO_NOTHING, blank=True, null=True)
-    collection = models.ForeignKey(CollectionsMaster, models.DO_NOTHING, blank=True, null=True)
+    stamp_card = models.ForeignKey('StampCardsMain', models.DO_NOTHING, blank=True, null=True)
+    collection = models.ForeignKey(CollectionsMain, models.DO_NOTHING, blank=True, null=True)
     rank = models.IntegerField(blank=True, null=True)
 
     class Meta:
@@ -599,12 +599,12 @@ class StampCardsCollections(models.Model):
         db_table = 'stamp_cards_collections'
 
 
-class StampCardsMaster(models.Model):
+class StampCardsMain(models.Model):
     stamp_card_id = models.AutoField(primary_key=True)
     title = models.CharField(max_length=50, blank=True, null=True)
     sub_title = models.CharField(max_length=100, blank=True, null=True)
     status_code = models.IntegerField(blank=True, null=True)
-    merchant = models.ForeignKey(MerchantMaster, models.DO_NOTHING, blank=True, null=True)
+    merchant = models.ForeignKey(MerchantMain, models.DO_NOTHING, blank=True, null=True)
     tnc = models.CharField(max_length=5000, blank=True, null=True)
     start_date = models.DateTimeField(blank=True, null=True)
     creation_time = models.DateTimeField(blank=True, null=True)
@@ -631,17 +631,17 @@ class StampCardsMaster(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'stamp_cards_master'
+        db_table = 'stamp_cards_main'
 
 
-class StaticContentMaster(models.Model):
+class StaticContentMain(models.Model):
     content_id = models.AutoField(primary_key=True)
     content_key = models.CharField(max_length=256, blank=True, null=True)
     content_value = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'static_content_master'
+        db_table = 'static_content_main'
 
 
 class StoreEchossEstamps(models.Model):
@@ -686,12 +686,12 @@ class StoresAudit(models.Model):
 class UserDealRecords(models.Model):
     user = models.ForeignKey('UserTable', models.DO_NOTHING)
     deals_record_id = models.AutoField(primary_key=True)
-    deal = models.ForeignKey(DealsMaster, models.DO_NOTHING)
+    deal = models.ForeignKey(DealsMain, models.DO_NOTHING)
     deal_time = models.DateTimeField()
     geox = models.CharField(db_column='geoX', max_length=45, blank=True, null=True)  # Field name made lowercase.
     geoy = models.CharField(db_column='geoY', max_length=45, blank=True, null=True)  # Field name made lowercase.
     ip_addr = models.CharField(max_length=45, blank=True, null=True)
-    merchant = models.ForeignKey(MerchantMaster, models.DO_NOTHING)
+    merchant = models.ForeignKey(MerchantMain, models.DO_NOTHING)
     from_state = models.IntegerField()
     to_state = models.IntegerField()
     merchant_store = models.ForeignKey(MerchantStores, models.DO_NOTHING, blank=True, null=True)
@@ -708,12 +708,12 @@ class UserDealRecords(models.Model):
 class UserStampingRecords(models.Model):
     stamps_record_id = models.AutoField(primary_key=True)
     user = models.ForeignKey('UserTable', models.DO_NOTHING)
-    stamp_card = models.ForeignKey(StampCardsMaster, models.DO_NOTHING)
+    stamp_card = models.ForeignKey(StampCardsMain, models.DO_NOTHING)
     stamp_time = models.DateTimeField()
     geox = models.CharField(db_column='geoX', max_length=45, blank=True, null=True)  # Field name made lowercase.
     geoy = models.CharField(db_column='geoY', max_length=45, blank=True, null=True)  # Field name made lowercase.
     ip_addr = models.CharField(max_length=45, blank=True, null=True)
-    merchant = models.ForeignKey(MerchantMaster, models.DO_NOTHING)
+    merchant = models.ForeignKey(MerchantMain, models.DO_NOTHING)
     from_state = models.IntegerField()
     to_state = models.IntegerField()
     merchant_store = models.ForeignKey(MerchantStores, models.DO_NOTHING, blank=True, null=True)
